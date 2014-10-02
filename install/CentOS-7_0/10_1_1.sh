@@ -226,10 +226,6 @@ mkdir ../zp_install_cache/
 git checkout-index -a -f --prefix=../zp_install_cache/
 cd ../zp_install_cache/
 
-# Lets pull in all the required updates etc.
-#rpm --import https://fedoraproject.org/static/0608B895.txt
-#cp etc/build/config_packs/centos_6_3/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo
-
 # problem upgrade centos 6.2 with 6.5 pacquet deteted as repo qpid-cpp-client
 yum -y remove qpid-cpp-client
 # We now update the server software packages.
@@ -237,7 +233,7 @@ yum -y update
 yum -y upgrade
 
 # Install required software and dependencies required by ZPanel.
-yum -y install ld-linux.so.2 libbz2.so.1 libdb-4.7.so libgd.so.2 httpd php php-suhosin php-devel php-gd php-mbstring php-mcrypt php-intl php-imap php-mysql php-xml php-xmlrpc curl curl-devel perl-libwww-perl libxml2 libxml2-devel mysql-server zip webalizer gcc gcc-c++ httpd-devel at make mysql-devel bzip2-devel postfix postfix-perl-scripts bash-completion dovecot dovecot-mysql dovecot-pigeonhole mysql-server proftpd proftpd-mysql bind bind-utils bind-libs
+yum -y install ld-linux.so.2 libbz2.so.1 libdb-4.7.so libgd.so.2 httpd php php-suhosin php-devel php-gd php-mbstring php-mcrypt php-intl php-imap php-mysql php-xml php-xmlrpc curl curl-devel perl-libwww-perl libxml2 libxml2-devel mariadb-server zip webalizer gcc gcc-c++ httpd-devel at make mariadb-devel bzip2-devel postfix postfix-perl-scripts bash-completion dovecot dovecot-mysql dovecot-pigeonhole proftpd proftpd-mysql bind bind-utils bind-libs
 
 # Generation of random passwords
 password=`passwordgen`;
@@ -275,7 +271,7 @@ sudo chown root /etc/zpanel/panel/bin/zsudo
 chmod +s /etc/zpanel/panel/bin/zsudo
 
 # MySQL specific installation tasks...
-service mysqld start
+systemctl start mariadb.service
 mysqladmin -u root password "$password"
 until mysql -u root -p$password -e ";" > /dev/null 2>&1 ; do
 read -s -p "enter your root mysql password : " password
