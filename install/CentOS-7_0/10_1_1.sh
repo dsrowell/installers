@@ -155,9 +155,12 @@ done
     #check if the machine and on openvz
     if [ -f "/etc/yum.repos.d/vz.repo" ]; then
       #vz.repo
-      sed -i 's|mirrorlist=http://vzdownload.swsoft.com/download/mirrors/centos-6|baseurl=http://vzdownload.swsoft.com/ez/packages/centos/6/$basearch/os/|' "/etc/yum.repos.d/vz.repo"
-      sed -i 's|mirrorlist=http://vzdownload.swsoft.com/download/mirrors/updates-released-ce6|baseurl=http://vzdownload.swsoft.com/ez/packages/centos/6/$basearch/updates/|' "/etc/yum.repos.d/vz.repo"
+      sed -i 's|mirrorlist=http://vzdownload.swsoft.com/download/mirrors/centos-7|baseurl=http://vzdownload.swsoft.com/ez/packages/centos/7/$basearch/os/|' "/etc/yum.repos.d/vz.repo"
+      sed -i 's|mirrorlist=http://vzdownload.swsoft.com/download/mirrors/updates-released-ce7|baseurl=http://vzdownload.swsoft.com/ez/packages/centos/7/$basearch/updates/|' "/etc/yum.repos.d/vz.repo"
     fi
+
+    #epel
+    yum install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 
     #disable deposits that could result in installation errors
     #repo ELRepo
@@ -195,10 +198,9 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 setenforce 0
 
 # We now stop IPTables to ensure a fully automated and pain free installation.
-service iptables save
-service iptables stop
-chkconfig sendmail off
-chkconfig iptables off
+systemctl stop firewalld.service
+systemctl disable sendmail.service
+systemctl disable firewalld.service
 
 # Start log creation.
 echo -e ""
@@ -208,11 +210,11 @@ echo -e ""
 rpm -qa
 
 # Removal of conflicting packages and services prior to ZPX installation.
-service sendmail stop
+systemctl stop sendmail.service
 yum -y remove bind-chroot
 
 # Install some standard utility packages required by the installer and/or ZPX.
-yum -y install sudo wget vim make zip unzip git chkconfig
+yum -y install sudo wget vim make zip unzip git
 
 
 # We now clone the ZPX software from GitHub
@@ -225,8 +227,8 @@ git checkout-index -a -f --prefix=../zp_install_cache/
 cd ../zp_install_cache/
 
 # Lets pull in all the required updates etc.
-rpm --import https://fedoraproject.org/static/0608B895.txt
-cp etc/build/config_packs/centos_6_3/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo
+#rpm --import https://fedoraproject.org/static/0608B895.txt
+#cp etc/build/config_packs/centos_6_3/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo
 
 # problem upgrade centos 6.2 with 6.5 pacquet deteted as repo qpid-cpp-client
 yum -y remove qpid-cpp-client
@@ -411,31 +413,30 @@ ln -s /etc/zpanel/configs/roundcube/config.inc.php /etc/zpanel/panel/etc/apps/we
 ln -s /etc/zpanel/configs/roundcube/db.inc.php /etc/zpanel/panel/etc/apps/webmail/config/db.inc.php
 
 # Enable system services and start/restart them as required.
-chkconfig httpd on
-chkconfig postfix on
-chkconfig dovecot on
-chkconfig crond on
-chkconfig mysqld on
-chkconfig named on
-chkconfig proftpd on
-service httpd start
-service postfix restart
-service dovecot start
-service crond start
-service mysqld restart
-service named start
-service proftpd start
-service atd start
+systemctl enable httpd.service
+systemctl enable postfix.service
+systemctl enable dovect.service
+systemctl enable crond.service
+systemctl enable mariadb.service
+systemctl enable named.service
+systemctl enable proftpd.service
+systemctl start httpd.service
+systemctl start postfix.service
+systemctl start dovect.service
+systemctl start crond.service
+systemctl start mariadb.service
+systemctl start named.service
+systemctl start atd.service
 php /etc/zpanel/panel/bin/daemon.php
 # restart all service
-service httpd restart
-service postfix restart
-service dovecot restart
-service crond restart
-service mysqld restart
-service named restart
-service proftpd restart
-service atd restart
+systemctl restart httpd.service
+systemctl restart postfix.service
+systemctl restart dovect.service
+systemctl restart crond.service
+systemctl restart mariadb.service
+systemctl restart named.service
+systemctl restart proftpd.service
+systemctl restart atd.service
 
 # We'll now remove the temporary install cache.
 cd ../
