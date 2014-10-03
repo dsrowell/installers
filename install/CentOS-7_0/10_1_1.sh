@@ -411,7 +411,7 @@ ln -s /etc/zpanel/configs/roundcube/db.inc.php /etc/zpanel/panel/etc/apps/webmai
 # Enable system services and start/restart them as required.
 systemctl enable httpd.service
 systemctl enable postfix.service
-systemctl enable dovect.service
+systemctl enable dovecot.service
 systemctl enable crond.service
 systemctl enable mariadb.service
 systemctl enable named.service
