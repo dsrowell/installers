@@ -160,7 +160,7 @@ done
     fi
 
     #epel
-    yum install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+    yum install -y http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
 
     #disable deposits that could result in installation errors
     #repo ELRepo
