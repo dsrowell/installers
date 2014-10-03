@@ -361,6 +361,7 @@ sed -i 's|DocumentRoot "/var/www/html"|DocumentRoot "/etc/zpanel/panel"|' /etc/h
 chown -R apache:apache /var/zpanel/temp/
 #Set keepalive on (default is off)
 sed -i "s|KeepAlive Off|KeepAlive On|" /etc/httpd/conf/httpd.conf
+sed -i "s|ServerTokens Maj$|ServerTokens Major|" /etc/zpanel/configs/apache/httpd.conf
 
 # PHP specific installation tasks...
 sed -i "s|;date.timezone =|date.timezone = $tz|" /etc/php.ini
@@ -427,7 +428,7 @@ php /etc/zpanel/panel/bin/daemon.php
 # restart all service
 systemctl restart httpd.service
 systemctl restart postfix.service
-systemctl restart dovect.service
+systemctl restart dovecot.service
 systemctl restart crond.service
 systemctl restart mariadb.service
 systemctl restart named.service
