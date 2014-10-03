@@ -418,7 +418,7 @@ systemctl enable named.service
 systemctl enable proftpd.service
 systemctl start httpd.service
 systemctl start postfix.service
-systemctl start dovect.service
+systemctl start dovecot.service
 systemctl start crond.service
 systemctl start mariadb.service
 systemctl start named.service
