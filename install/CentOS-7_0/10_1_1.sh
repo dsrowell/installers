@@ -362,6 +362,9 @@ chown -R apache:apache /var/zpanel/temp/
 #Set keepalive on (default is off)
 sed -i "s|KeepAlive Off|KeepAlive On|" /etc/httpd/conf/httpd.conf
 sed -i "s|ServerTokens Maj$|ServerTokens Major|" /etc/zpanel/configs/apache/httpd.conf
+# update to new apache
+if ! grep -q "Order allow,deny" /etc/zpanel/panel/modules/apache_admin/hooks/OnDaemonRun.php; then sed -i 's|Order allow,deny|Require all granted|' /etc/zpanel/panel/modules/apache_admin/hooks/OnDaemonRun.php
+if ! grep -q "Allow from all" /etc/zpanel/panel/modules/apache_admin/hooks/OnDaemonRun.php; then sed -i '|Allow from all|d' /etc/zpanel/panel/modules/apache_admin/hooks/OnDaemonRun.php
 
 # PHP specific installation tasks...
 sed -i "s|;date.timezone =|date.timezone = $tz|" /etc/php.ini
